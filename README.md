@@ -39,4 +39,4 @@ Hardware
 ==============
 
 
-![Wiring description](mega_rover_toy_01/docs/IMG_1446.JPG?raw=true "Wiring")
+![Wiring description](/docs/IMG_1446.JPG?raw=true "Wiring")
