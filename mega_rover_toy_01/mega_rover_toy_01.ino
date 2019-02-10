@@ -62,4 +62,6 @@ void loop() {
       Serial.print(arg, HEX);
     }
   } 
+  arg = 0;
+  command = 0;
 }

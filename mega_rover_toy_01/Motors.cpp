@@ -24,7 +24,7 @@ void MotorGroup::rotate(uint8_t speed, bool clockwise)
 }
 
 Motors::Motors(MotorGroup *leftGrp, MotorGroup *rightGrp, uint8_t standByPin) :
-  leftGrp(leftGrp), rightGrp(rightGrp), standByPin(standByPin)
+  leftGrp(leftGrp), rightGrp(rightGrp), standByPin(standByPin), speed(127)
 {
   pinMode(standByPin, OUTPUT);
 }
@@ -34,13 +34,14 @@ Motors::~Motors()
   
 }
 
-
 void Motors::turnLeft() 
 {
+  rotateDirection(true, false, 200);
 }
 
 void Motors::turnRight()
 {
+  rotateDirection(false, true, 200);
 }
 
 void Motors::moveForward()
@@ -57,12 +58,17 @@ void Motors::moveBack()
 
 void Motors::rotateAll(bool clockwise)
 {
+  rotateDirection(clockwise, clockwise, 500);
+}
+
+void Motors::rotateDirection(bool clockwiseLeft, bool cloclwiseRight, uint16_t duration)
+{ 
+  leftGrp->rotate(speed, clockwiseLeft);
+  rightGrp->rotate(speed, cloclwiseRight);
   digitalWrite(standByPin, 1); 
-  leftGrp->rotate(speed, clockwise);
-  rightGrp->rotate(speed, clockwise);
-  digitalWrite(standByPin, 0); 
-  delay(3000);
-  digitalWrite(standByPin, 1); 
+  delay(duration);
+  Serial.println("stoping");
+  digitalWrite(standByPin, 0);   
 }
 
 void Motors::setSpeed(uint8_t speed)

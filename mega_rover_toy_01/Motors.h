@@ -35,6 +35,7 @@ public:
 private:
 
   void rotateAll(bool clockwise);
+  void rotateDirection(bool clockwiseLeft, bool cloclwiseRight, uint16_t duration);
 
   MotorGroup *leftGrp;
   MotorGroup *rightGrp;
