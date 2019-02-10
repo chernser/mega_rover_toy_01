@@ -7,7 +7,12 @@
 
 BleRemote remote(/* tx */ 12, /* rx */ 13);
 
-MotorGroup leftGrp(/* p1 */3, /* p2 */4, /* speed pin */ 5);
+
+/**
+ * Left group should be in reverse to right because motors are 
+ * fliped
+ */
+MotorGroup leftGrp(/* p1 */4, /* p2 */3, /* speed pin */ 5);
 MotorGroup rightGrp(/* p1 */8, /* p2 */7, /* speed pin */ 6);
 Motors motors(&leftGrp, &rightGrp, /* standby pin*/ 2);
 

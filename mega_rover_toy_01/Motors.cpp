@@ -18,6 +18,11 @@ MotorGroup::~MotorGroup()
 
 void MotorGroup::rotate(uint8_t speed, bool clockwise) 
 {
+  if (clockwise) {
+    Serial.println("clockwise");
+  } else {
+    Serial.println("conter-clockwise");
+  }
   analogWrite(speedPin, speed);
   digitalWrite(p1, (uint8_t)(clockwise ? 1 : 0));
   digitalWrite(p2, (uint8_t)(clockwise ? 0 : 1));
@@ -63,9 +68,11 @@ void Motors::rotateAll(bool clockwise)
 
 void Motors::rotateDirection(bool clockwiseLeft, bool cloclwiseRight, uint16_t duration)
 { 
+  Serial.print(clockwiseLeft); Serial.print(cloclwiseRight); Serial.println(duration);
+  digitalWrite(standByPin, 1);
   leftGrp->rotate(speed, clockwiseLeft);
   rightGrp->rotate(speed, cloclwiseRight);
-  digitalWrite(standByPin, 1); 
+   
   delay(duration);
   Serial.println("stoping");
   digitalWrite(standByPin, 0);   
