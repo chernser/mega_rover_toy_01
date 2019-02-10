@@ -28,9 +28,15 @@ TBD: will complete list later
 
 
 Source Structure
-=============
+================
 
 ./carremote -	iOS application with simple control 
 ./mega_rover_toy_01 - arduino project
 
 
+
+Hardware
+==============
+
+
+![Wiring description](mega_rover_toy_01/docs/IMG_1446.JPG?raw=true "Wiring")
