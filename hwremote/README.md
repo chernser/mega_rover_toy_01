@@ -2,8 +2,14 @@ Car Remote Hardware Implementation
 ==================================
 
 
+The HAT used for project - [link](www.waveshare.com/wiki/1.44inch_LCD_HAT)
+
 Display Setup
 -------------
+
+This config is true for 3 button/1 joystick/display HAT.
+Display has 128x128 resolutions. 
+It is needed, because car is extandable and more moving parts will need to be controlled. 
 
 Linux Kernel modules:
     *   fbtft
@@ -32,3 +38,8 @@ BLE Programming
 
 [Python lib](https://github.com/IanHarvey/bluepy)
 
+
+Buttons Setup
+-------------
+
+Buttons on the HAT are using GPIO.

@@ -1,7 +1,60 @@
 import curses
 from bluepy import btle
 import time
+from gpiozero import Button
 
+class HWControlls: 
+
+    def __init__(self):
+        self.key1 = Button(21)
+        self.key2 = Button(20)
+        self.key3 = Button(16)
+
+        # UP  Key pressed <gpiozero.Button object on pin GPIO6, pull_up=True, is_active=True>
+        # DOWN Key pressed <gpiozero.Button object on pin GPIO19, pull_up=True, is_active=True>
+        # Left Key pressed <gpiozero.Button object on pin GPIO5, pull_up=True, is_active=True>
+        # Right Key pressed <gpiozero.Button object on pin GPIO26, pull_up=True, is_active=True>
+        self.jLeft = Button(5)
+        self.jUp = Button(6)
+        self.jDown = Button(19)
+        self.jRight = Button(26)
+        self.jCenter = Button(13)
+
+        self.key1.when_pressed = self.on_key1_pressed    
+        self.key2.when_pressed = self.on_key2_pressed
+        self.key3.when_pressed = self.on_key3_pressed
+
+        self.jUp.when_pressed = self.on_up_pressed
+        self.jDown.when_pressed = self.on_down_pressed
+        self.jLeft.when_pressed = self.on_left_pressed
+        self.jRight.when_pressed = self.on_right_pressed
+        self.last_pressed_key = None
+
+    def on_key1_pressed(self):
+        self.last_pressed_key = '1'
+
+    def on_key2_pressed(self):
+        self.last_pressed_key = '2'
+
+    def on_key3_pressed(self):
+        self.last_pressed_key = '3'
+
+    def on_up_pressed(self):
+        self.last_pressed_key = 'KEY_UP'
+
+    def on_down_pressed(self):
+        self.last_pressed_key = 'KEY_DOWN'
+
+    def on_right_pressed(self):
+        self.last_pressed_key = 'KEY_RIGHT'
+
+    def on_left_pressed(self):
+        self.last_pressed_key = 'KEY_LEFT'
+        
+    def get_key(self):
+        key = self.last_pressed_key
+        self.last_pressed_key = None
+        return key
 
 class RemoteBLE:
 
@@ -25,6 +78,7 @@ class RemoteBLE:
         self._device = btle.Peripheral(self._device_mac)
         svc = self._device.getServiceByUUID(btle.UUID(RemoteBLE.SERVICE_UUID))
         self._char = svc.getCharacteristics(btle.UUID(RemoteBLE.CHAR_UUID))[0]        
+        self._is_connected = True
 
     def write_command(self, command, arg = None):
         result = self._char.write(command, withResponse = True)
@@ -43,6 +97,7 @@ class MainScreen:
         self.speed = 100
         self.connected = False
         self.ble = RemoteBLE()
+        self.controls = HWControlls()
         return
 
     def draw(self):
@@ -86,6 +141,9 @@ class MainScreen:
             self.speed = 10
 
     def move_and_turn(self, key):
+        if not self.ble.is_connected(): 
+            return
+
         if key == 'KEY_UP':
             command = RemoteBLE.MV_FORWARD
         elif key == 'KEY_DOWN':
@@ -96,8 +154,6 @@ class MainScreen:
             command = RemoteBLE.TURN_LEFT
         else: 
             return
-
-        self.screen.addstr(10, 1, "writing command" , curses.color_pair(1))            
         self.ble.write_command(command)
 
     def reconnect(self):
@@ -147,19 +203,25 @@ class MainScreen:
 
 
 
+
 def main(stdscr):
     screen = MainScreen(stdscr)
 
     screen.draw()
-    
+    stdscr.timeout(0)
     while True:
         stdscr.refresh()
-        key = stdscr.getkey()
+        try:
+            key = stdscr.getkey()
+        except:
+            key = screen.controls.get_key()
+
         if key == 'q': 
             exit(0)
+        elif key is not None:
+            screen.on_key_pressed(key)
+            screen.update()
 
-        screen.on_key_pressed(key)
-        screen.update()
 
 curses.initscr()
 curses.start_color()
