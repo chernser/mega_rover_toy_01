@@ -15,6 +15,6 @@ print svc
 ch_uuid = "ffe1"
 ch = svc.getCharacteristics(btle.UUID(ch_uuid))[0]
 print ch
-ch.write(bytes("\x0212"))
-time.sleep(1.0)
-
+result = ch.write('\x02\x12', withResponse=True)
+time.sleep(3.0)
+print result
