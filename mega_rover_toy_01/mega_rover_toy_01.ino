@@ -1,11 +1,20 @@
 
 #include <SoftwareSerial.h>
-#include <AltSoftSerial.h>
+//#include <AltSoftSerial.h>
 
 #include "Motors.h"
 #include "BleRemote.h"
 
-BleRemote remote(/* tx */ 12, /* rx */ 13);
+//BleRemote remote(/* tx */ 12, /* rx */ 13);
+/*
+ * BLE module is HM-10. Work on 9600 baud rate and has old firmware
+ * http://www.martyncurrey.com/hm-10-bluetooth-4ble-modules/
+ * Baud rate MUST match, otherwise commands are not read properly. 
+ * Use some BLE test application for smart phone to quickly check it.
+ * Another alternative is to use Software Serial.
+ * Disconnect module before uploading the scatch.
+ */
+BleRemote remote;
 
 
 /**
@@ -18,7 +27,7 @@ Motors motors(&leftGrp, &rightGrp, /* standby pin*/ 2);
 
 void setup() {
 
-  Serial.begin(57600);
+  Serial.begin(9600);
   while(!Serial);
 
   
@@ -32,6 +41,7 @@ void loop() {
 
   uint8_t command = remote.read8bit();
   uint8_t arg = 0;
+ 
   if (command > 0) {
     Serial.print(command, HEX);
     delay(100);

@@ -10,7 +10,8 @@ class BleRemote {
 
 
 public:
-  BleRemote(uint8_t txPin, uint8_t rxPin);
+  BleRemote();
+//  BleRemote(uint8_t txPin, uint8_t rxPin);
   ~BleRemote() {};
 
   void init();
@@ -18,7 +19,8 @@ public:
   uint8_t read8bit();
 
 public: 
-SoftwareSerial serial;
+// SC: keep here just for example
+//SoftwareSerial serial;
 };
 
 #endif
